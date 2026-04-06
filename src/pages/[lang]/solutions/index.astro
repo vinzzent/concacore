@@ -1,0 +1,50 @@
+---
+import { getCollection } from 'astro:content';
+import type { CollectionEntry } from 'astro:content';
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import type { Locale } from '../../../i18n/translations';
+
+export async function getStaticPaths() {
+  return [
+    { params: { lang: 'en-us' } },
+    { params: { lang: 'pt-br' } }
+  ];
+}
+
+const { lang } = Astro.params as { lang: Locale };
+
+// Busca as páginas de soluções e filtra pelo idioma atual
+const solutionsPages = await getCollection('solutions', (entry: CollectionEntry<'solutions'>) => {
+  return entry.data.lang.toLowerCase() === lang;
+});
+
+// Pega o primeiro e único arquivo correspondente
+const doc = solutionsPages[0];
+
+if (!doc) {
+  throw new Error(`Página de soluções não encontrada para o idioma: ${lang}`);
+}
+
+const { Content } = await doc.render();
+const { title, hero } = doc.data;
+---
+
+<BaseLayout title={title} lang={lang}>
+  <div class="max-w-4xl mx-auto">
+    <header class="text-center py-16 border-b mb-12">
+      <span class="text-blue-600 font-bold tracking-wider uppercase text-sm mb-4 block">
+        {hero.label}
+      </span>
+      <h1 class="text-5xl font-extrabold mb-6 text-gray-900 leading-tight">
+        {hero.title}
+      </h1>
+      <p class="text-xl text-gray-600 leading-relaxed max-w-3xl mx-auto">
+        {hero.subtitle}
+      </p>
+    </header>
+
+    <div class="prose prose-lg prose-blue max-w-none pb-16">
+      <Content />
+    </div>
+  </div>
+</BaseLayout>

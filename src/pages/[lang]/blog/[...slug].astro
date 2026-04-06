@@ -1,0 +1,56 @@
+---
+import { getCollection } from 'astro:content';
+import { getResourcesAsArray } from '../../../data/resources';
+import BlogPostLayout from '../../../layouts/BlogPostLayout.astro';
+import ResourceLayout from '../../../layouts/ResourceLayout.astro';
+import type { Locale } from '../../../i18n/translations';
+
+export async function getStaticPaths() {
+  const paths = [];
+
+  // 1. Gera caminhos para os Artigos (Markdown)
+  const posts = await getCollection('blog');
+  for (const post of posts) {
+    const lang = post.data.lang.toLowerCase() as Locale;
+    paths.push({
+      params: { lang, slug: post.slug },
+      props: { type: 'post', data: post, lang } // Flag de identificação
+    });
+  }
+
+  // 2. Gera caminhos para os Recursos (JS)
+  const resources = getResourcesAsArray();
+  for (const resource of resources) {
+    // Para recursos, geramos a rota para ambos os idiomas disponíveis
+    for (const lang of ['en-us', 'pt-br'] as Locale[]) {
+      paths.push({
+        params: { lang, slug: resource.id },
+        props: { type: 'resource', data: resource, lang } // Flag de identificação
+      });
+    }
+  }
+
+  return paths;
+}
+
+const { type, data, lang } = Astro.props;
+
+// Renderizamos condicionalmente baseando-se na flag injetada pelo roteador
+---
+
+{type === 'post' ? (
+  // O componente async render() só existe em coleções de Markdown
+  <BlogPostLayout post={data} lang={lang}>
+    {async () => {
+      const { Content } = await data.render();
+      return <Content />;
+    }}
+  </BlogPostLayout>
+) : (
+  <ResourceLayout 
+    resource={data.translations[lang]} 
+    format={data.format} 
+    type={data.type}
+    lang={lang} 
+  />
+)}

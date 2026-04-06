@@ -1,0 +1,51 @@
+---
+import BaseLayout from './BaseLayout.astro';
+import { useTranslations } from '../i18n/translations';
+import type { Locale } from '../i18n/translations';
+import type { LocalizedResource, ResourceFormat, ResourceType } from '../data/resources';
+
+interface Props {
+  resource: LocalizedResource;
+  format: ResourceFormat;
+  type: ResourceType;
+  lang: Locale;
+}
+
+const { resource, format, type, lang } = Astro.props;
+const t = useTranslations(lang);
+---
+
+<BaseLayout title={resource.title} description={resource.description} lang={lang}>
+  <article class="max-w-4xl mx-auto">
+    <header class="mb-8 border-b pb-6">
+      <div class="flex items-center gap-3 mb-4">
+        <span class="bg-blue-100 text-blue-800 text-xs font-semibold px-2.5 py-0.5 rounded">
+          {t(type)} </span>
+      </div>
+      <h1 class="text-4xl font-extrabold mb-4">{resource.title}</h1>
+      <p class="text-xl text-gray-600 mb-4">{resource.description}</p>
+      <time datetime={resource.published.toISOString()} class="text-gray-500 text-sm">
+        {resource.published.toLocaleDateString(lang, { year: 'numeric', month: 'long', day: 'numeric' })}
+      </time>
+    </header>
+
+    <div class="bg-gray-50 rounded-lg p-4 md:p-8 flex justify-center">
+      {format === 'video' ? (
+        <iframe 
+          class="w-full aspect-video rounded shadow-lg"
+          src={resource.source} 
+          title={resource.title}
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+          allowfullscreen>
+        </iframe>
+      ) : (
+        <div class="text-center py-12">
+          <p class="mb-6 text-gray-600">{t('documentation')}</p>
+          <a href={resource.source} target="_blank" class="bg-blue-600 text-white px-8 py-3 rounded hover:bg-blue-700 transition">
+            {t('viewBtn')} PDF
+          </a>
+        </div>
+      )}
+    </div>
+  </article>
+</BaseLayout>

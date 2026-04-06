@@ -1,0 +1,43 @@
+---
+import '../styles/tailwind.css'; // Obrigatório para o Tailwind v4 via Vite
+import { useTranslations } from '../i18n/translations';
+import type { Locale } from '../i18n/translations';
+
+interface Props {
+  title: string;
+  description?: string;
+  lang: Locale;
+}
+
+const { title, description, lang } = Astro.props;
+const t = useTranslations(lang);
+
+// Regra aplicada: O idioma na URL sempre deve ser minúsculo (ex: /pt-br/)
+---
+
+<html lang={lang}>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{title}</title>
+    {description && <meta name="description" content={description} />}
+  </head>
+  <body class="bg-white text-gray-900 font-sans antialiased">
+    <header class="border-b py-4">
+      <nav class="container mx-auto flex gap-4">
+        <a href={`/${lang}/`} class="hover:underline">{t('home')}</a>
+        <a href={`/${lang}/blog/`} class="hover:underline">{t('blog')}</a>
+        <a href={`/${lang}/solutions/`} class="hover:underline">{t('solutions')}</a>
+      </nav>
+    </header>
+
+    <main class="container mx-auto py-8">
+      <slot />
+    </main>
+
+    <footer class="border-t py-8 mt-12 text-center text-sm text-gray-600">
+      <p>{t('footerTagline')}</p>
+      <p>&copy; {new Date().getFullYear()} - {t('rights')} | {t('builtWith')}</p>
+    </footer>
+  </body>
+</html>

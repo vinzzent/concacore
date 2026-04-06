@@ -1,0 +1,39 @@
+---
+import BaseLayout from './BaseLayout.astro';
+import type { CollectionEntry } from 'astro:content';
+import { useTranslations } from '../i18n/translations';
+import type { Locale } from '../i18n/translations';
+
+interface Props {
+  product: CollectionEntry<'products'>;
+  lang: Locale;
+}
+
+const { product, lang } = Astro.props;
+const t = useTranslations(lang);
+const { title, description, appsource } = product.data;
+---
+
+<BaseLayout title={title} description={description} lang={lang}>
+  <div class="max-w-4xl mx-auto">
+    <div class="border-b pb-8 mb-8">
+      <h1 class="text-4xl font-bold mb-4">{title}</h1>
+      {description && <p class="text-xl text-gray-600 mb-6">{description}</p>}
+      
+      {appsource && (
+        <a 
+          href={appsource} 
+          target="_blank" 
+          rel="noopener noreferrer" 
+          class="inline-block bg-blue-600 text-white font-medium px-6 py-3 rounded hover:bg-blue-700 transition-colors"
+        >
+          {t('getOnAppSource')}
+        </a>
+      )}
+    </div>
+
+    <div class="prose max-w-none">
+      <slot />
+    </div>
+  </div>
+</BaseLayout>

@@ -1,0 +1,26 @@
+---
+import { getCollection } from 'astro:content';
+import ProductLayout from '../../../layouts/ProductLayout.astro';
+import type { Locale } from '../../../i18n/translations';
+import type { CollectionEntry } from 'astro:content';
+
+export async function getStaticPaths() {
+  const products = await getCollection('products');
+  
+  return products.map((product: CollectionEntry<'products'>) => {
+    const lang = product.data.lang.toLowerCase() as Locale;
+    
+    return {
+      params: { lang, slug: product.slug },
+      props: { product, lang },
+    };
+  });
+}
+
+const { product, lang } = Astro.props as { product: CollectionEntry<'products'>; lang: Locale };
+const { Content } = await product.render();
+---
+
+<ProductLayout product={product} lang={lang}>
+  <Content />
+</ProductLayout>
