@@ -1,23 +1,25 @@
+// src/content.config.ts
 import { defineCollection, z } from 'astro:content';
+import { glob } from 'astro/loaders';
 
 const blogCollection = defineCollection({
-  type: 'content',
+  loader: glob({ pattern: "**/*.md", base: "./src/content/blog" }),
   schema: z.object({
-    id: z.string(),
+    id: z.string().optional(),
     title: z.string(),
     description: z.string().optional(),
     published: z.coerce.date(),
-    lang: z.enum(['en-us', 'pt-br', 'en-US', 'pt-BR']), // Suporta o padrão antigo caso ainda esteja no MD
+    lang: z.enum(['en-us', 'pt-br', 'en-US', 'pt-BR']),
     type: z.string().optional(),
     tags: z.array(z.string()).default([]),
-    layout: z.string().optional(), // Propriedade legada do 11ty, mantida para compatibilidade de leitura
+    layout: z.string().optional(), 
   }),
 });
 
 const productsCollection = defineCollection({
-  type: 'content',
+  loader: glob({ pattern: "**/*.md", base: "./src/content/products" }),
   schema: z.object({
-    id: z.string(),
+    id: z.string().optional(),
     title: z.string(),
     description: z.string().optional(),
     published: z.coerce.date(),
@@ -34,7 +36,7 @@ const productsCollection = defineCollection({
 });
 
 const solutionsCollection = defineCollection({
-  type: 'content',
+  loader: glob({ pattern: "**/*.md", base: "./src/content/solutions" }),
   schema: z.object({
     title: z.string(),
     lang: z.enum(['en-us', 'pt-br', 'en-US', 'pt-BR']),
@@ -49,5 +51,5 @@ const solutionsCollection = defineCollection({
 export const collections = {
   blog: blogCollection,
   products: productsCollection,
-  solutions: solutionsCollection, // Adicione aqui
+  solutions: solutionsCollection,
 };

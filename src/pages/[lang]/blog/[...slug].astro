@@ -1,6 +1,8 @@
 ---
-import { getCollection } from 'astro:content';
+import { getCollection, render } from 'astro:content';
+import type { CollectionEntry } from 'astro:content';
 import { getResourcesAsArray } from '../../../data/resources';
+import type { ResourceData } from '../../../data/resources'; // Import the type
 import BlogPostLayout from '../../../layouts/BlogPostLayout.astro';
 import ResourceLayout from '../../../layouts/ResourceLayout.astro';
 import type { Locale } from '../../../i18n/translations';
@@ -10,22 +12,24 @@ export async function getStaticPaths() {
 
   // 1. Gera caminhos para os Artigos (Markdown)
   const posts = await getCollection('blog');
+  
   for (const post of posts) {
     const lang = post.data.lang.toLowerCase() as Locale;
+    const slug = post.id.split('/').pop(); 
+    
     paths.push({
-      params: { lang, slug: post.slug },
-      props: { type: 'post', data: post, lang } // Flag de identificação
+      params: { lang, slug },
+      props: { type: 'post' as const, data: post, lang } 
     });
   }
 
   // 2. Gera caminhos para os Recursos (JS)
   const resources = getResourcesAsArray();
   for (const resource of resources) {
-    // Para recursos, geramos a rota para ambos os idiomas disponíveis
     for (const lang of ['en-us', 'pt-br'] as Locale[]) {
       paths.push({
         params: { lang, slug: resource.id },
-        props: { type: 'resource', data: resource, lang } // Flag de identificação
+        props: { type: 'resource' as const, data: resource, lang } 
       });
     }
   }
@@ -33,24 +37,30 @@ export async function getStaticPaths() {
   return paths;
 }
 
-const { type, data, lang } = Astro.props;
+// 3. Define the strict union type for props
+type Props = 
+  | { type: 'post'; data: CollectionEntry<'blog'>; lang: Locale }
+  | { type: 'resource'; data: ResourceData; lang: Locale };
 
-// Renderizamos condicionalmente baseando-se na flag injetada pelo roteador
+const props = Astro.props as Props;
+
+// 4. Safely render conditionally using props.type as the discriminant
+let Content;
+if (props.type === 'post') {
+  const rendered = await render(props.data);
+  Content = rendered.Content;
+}
 ---
 
-{type === 'post' ? (
-  // O componente async render() só existe em coleções de Markdown
-  <BlogPostLayout post={data} lang={lang}>
-    {async () => {
-      const { Content } = await data.render();
-      return <Content />;
-    }}
+{props.type === 'post' && Content ? (
+  <BlogPostLayout post={props.data} lang={props.lang}>
+    <Content />
   </BlogPostLayout>
-) : (
+) : props.type === 'resource' ? (
   <ResourceLayout 
-    resource={data.translations[lang]} 
-    format={data.format} 
-    type={data.type}
-    lang={lang} 
+    resource={props.data.translations[props.lang]} 
+    format={props.data.format} 
+    type={props.data.type}
+    lang={props.lang} 
   />
-)}
+) : null}

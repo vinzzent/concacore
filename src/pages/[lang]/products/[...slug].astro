@@ -1,5 +1,5 @@
 ---
-import { getCollection } from 'astro:content';
+import { getCollection, render } from 'astro:content'; // 1. Importamos o 'render' aqui
 import ProductLayout from '../../../layouts/ProductLayout.astro';
 import type { Locale } from '../../../i18n/translations';
 import type { CollectionEntry } from 'astro:content';
@@ -10,15 +10,20 @@ export async function getStaticPaths() {
   return products.map((product: CollectionEntry<'products'>) => {
     const lang = product.data.lang.toLowerCase() as Locale;
     
+    // 2. Extraímos o slug corretamente a partir do novo 'id' do Astro 6
+    const slug = product.id.split('/').pop(); 
+    
     return {
-      params: { lang, slug: product.slug },
+      params: { lang, slug },
       props: { product, lang },
     };
   });
 }
 
 const { product, lang } = Astro.props as { product: CollectionEntry<'products'>; lang: Locale };
-const { Content } = await product.render();
+
+// 3. Usamos a nova API de renderização isolada do Astro 6
+const { Content } = await render(product);
 ---
 
 <ProductLayout product={product} lang={lang}>

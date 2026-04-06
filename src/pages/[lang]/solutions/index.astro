@@ -1,6 +1,5 @@
 ---
-import { getCollection } from 'astro:content';
-import type { CollectionEntry } from 'astro:content';
+import { getCollection, render } from 'astro:content';
 import BaseLayout from '../../../layouts/BaseLayout.astro';
 import type { Locale } from '../../../i18n/translations';
 
@@ -13,37 +12,36 @@ export async function getStaticPaths() {
 
 const { lang } = Astro.params as { lang: Locale };
 
-// Busca as páginas de soluções e filtra pelo idioma atual
-const solutionsPages = await getCollection('solutions', (entry: CollectionEntry<'solutions'>) => {
+const solutionsPages = await getCollection('solutions', (entry) => {
   return entry.data.lang.toLowerCase() === lang;
 });
 
-// Pega o primeiro e único arquivo correspondente
 const doc = solutionsPages[0];
 
 if (!doc) {
   throw new Error(`Página de soluções não encontrada para o idioma: ${lang}`);
 }
 
-const { Content } = await doc.render();
+// Astro 6 Loader API requirement
+const { Content } = await render(doc);
 const { title, hero } = doc.data;
 ---
 
 <BaseLayout title={title} lang={lang}>
   <div class="max-w-4xl mx-auto">
-    <header class="text-center py-16 border-b mb-12">
-      <span class="text-blue-600 font-bold tracking-wider uppercase text-sm mb-4 block">
+    <header class="text-center py-16 border-b border-slate-200 mb-12 animate-fade-up">
+      <span class="text-brand-cyan font-bold tracking-wider uppercase text-sm mb-4 block">
         {hero.label}
       </span>
-      <h1 class="text-5xl font-extrabold mb-6 text-gray-900 leading-tight">
+      <h1 class="text-5xl font-extrabold mb-6 text-brand-navy leading-tight">
         {hero.title}
       </h1>
-      <p class="text-xl text-gray-600 leading-relaxed max-w-3xl mx-auto">
+      <p class="text-xl text-brand-muted leading-relaxed max-w-3xl mx-auto">
         {hero.subtitle}
       </p>
     </header>
 
-    <div class="prose prose-lg prose-blue max-w-none pb-16">
+    <div class="prose prose-lg max-w-none pb-16">
       <Content />
     </div>
   </div>

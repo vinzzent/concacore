@@ -1,7 +1,9 @@
 ---
-import '../styles/tailwind.css'; // Obrigatório para o Tailwind v4 via Vite
+import '../styles/tailwind.css';
 import { useTranslations } from '../i18n/translations';
 import type { Locale } from '../i18n/translations';
+import { getCollection } from 'astro:content';
+import type { CollectionEntry } from 'astro:content';
 
 interface Props {
   title: string;
@@ -12,7 +14,11 @@ interface Props {
 const { title, description, lang } = Astro.props;
 const t = useTranslations(lang);
 
-// Regra aplicada: O idioma na URL sempre deve ser minúsculo (ex: /pt-br/)
+// 1. Tipamos a constante 'products' inteira aqui no frontmatter
+const products: CollectionEntry<'products'>[] = await getCollection(
+  'products', 
+  (entry: CollectionEntry<'products'>) => entry.data.lang.toLowerCase() === lang
+);
 ---
 
 <html lang={lang}>
@@ -22,21 +28,53 @@ const t = useTranslations(lang);
     <title>{title}</title>
     {description && <meta name="description" content={description} />}
   </head>
-  <body class="bg-white text-gray-900 font-sans antialiased">
-    <header class="border-b py-4">
-      <nav class="container mx-auto flex gap-4">
-        <a href={`/${lang}/`} class="hover:underline">{t('home')}</a>
-        <a href={`/${lang}/blog/`} class="hover:underline">{t('blog')}</a>
-        <a href={`/${lang}/solutions/`} class="hover:underline">{t('solutions')}</a>
+  <body class="bg-brand-bg text-brand-text font-sans antialiased flex flex-col min-h-screen">
+    <header class="border-b border-slate-200 py-4 bg-white shadow-sm z-50">
+      <nav class="container mx-auto flex gap-6 items-center">
+        <a href={`/${lang}/`} class="nav-link font-bold">{t('home')}</a>
+        
+        <div class="relative group" x-data="{ open: false }" @mouseleave="open = false">
+          <button 
+            @mouseenter="open = true"
+            @click="open = !open" 
+            class="nav-link flex items-center gap-1 cursor-pointer"
+          >
+            {t('products') || 'Products'}
+            <svg class="w-4 h-4 transition-transform" :class="open ? 'rotate-180' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+          </button>
+          
+          <div 
+            x-show="open" 
+            x-transition.opacity.duration.200ms
+            class="absolute top-full left-0 mt-2 w-56 bg-white border border-slate-200 rounded-md shadow-lg py-2 hidden group-hover:block"
+            style="display: none;"
+          >
+            {/* 2. O ".map()" agora é limpo, sem tipagem inline, evitando o erro de "Expression expected" */}
+            {products.map((product) => {
+              const slug = product.id.split('/').pop();
+              return (
+                <a 
+                  href={`/${lang}/products/${slug}/`} 
+                  class="block px-4 py-2 text-sm text-brand-text hover:bg-brand-surface hover:text-brand-cyan transition-colors"
+                >
+                  {product.data.title}
+                </a>
+              );
+            })}
+          </div>
+        </div>
+
+        <a href={`/${lang}/blog/`} class="nav-link">{t('blog')}</a>
+        <a href={`/${lang}/solutions/`} class="nav-link">{t('solutions')}</a>
       </nav>
     </header>
 
-    <main class="container mx-auto py-8">
+    <main class="container mx-auto py-8 px-4 grow">
       <slot />
     </main>
 
-    <footer class="border-t py-8 mt-12 text-center text-sm text-gray-600">
-      <p>{t('footerTagline')}</p>
+    <footer class="border-t border-slate-200 py-8 mt-12 text-center text-sm text-brand-muted bg-white">
+      <p>{t('footerTagline') || 'Turning data into action.'}</p>
       <p>&copy; {new Date().getFullYear()} - {t('rights')} | {t('builtWith')}</p>
     </footer>
   </body>
