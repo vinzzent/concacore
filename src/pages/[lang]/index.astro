@@ -1,7 +1,9 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
+import ProductCard from '../../components/ProductCard.astro';
 import { useTranslations } from '../../i18n/translations';
 import type { Locale } from '../../i18n/translations';
+import { getCollection } from 'astro:content';
 
 export function getStaticPaths() {
   return [
@@ -12,15 +14,22 @@ export function getStaticPaths() {
 
 const { lang } = Astro.params as { lang: Locale };
 const t = useTranslations(lang);
+
+// Fetch products and filter by the current language
+const products = await getCollection('products', (entry) => {
+  return entry.data.lang.toLowerCase() === lang;
+});
 ---
 
-<BaseLayout title={t('home')} description={t('defaultDescription')} lang={lang}>
+<BaseLayout title={t('home') || 'Home'} description={t('defaultDescription') || ''} lang={lang}>
   <section class="text-center py-20">
     <h1 class="text-5xl font-extrabold mb-6">{t('defaultDescription')}</h1>
-    <p class="text-xl text-gray-600 mb-8">{t('footerTagline')}</p>
+    <p class="text-xl text-gray-600 mb-12">{t('footerTagline')}</p>
     
-    <a href={`/${lang}/blog/`} class="inline-block bg-blue-600 text-white px-8 py-4 rounded-lg font-bold hover:bg-blue-700 transition">
-      {t('blog')}
-    </a>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6 max-w-4xl mx-auto text-left">
+      {products.map((product) => (
+        <ProductCard product={product} lang={lang} />
+      ))}
+    </div>
   </section>
 </BaseLayout>

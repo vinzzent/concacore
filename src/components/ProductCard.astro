@@ -2,6 +2,7 @@
 import type { CollectionEntry } from 'astro:content';
 import { useTranslations } from '../i18n/translations';
 import type { Locale } from '../i18n/translations';
+import { Image } from 'astro:assets';
 
 interface Props {
   product: CollectionEntry<'products'>;
@@ -10,24 +11,48 @@ interface Props {
 
 const { product, lang } = Astro.props;
 const t = useTranslations(lang);
-const { title, description, isNew } = product.data;
+// Destructure image and icon alongside the other properties
+const { title, description, isNew, image, icon } = product.data; 
 const slug = product.id.split('/').pop();
 ---
 
-<article class="border rounded-lg p-6 shadow-sm hover:shadow-md transition-shadow">
+<article class="border rounded-lg p-6 shadow-sm hover:shadow-md transition-shadow flex flex-col h-full">
+  {/* Optional Product Image */}
+  {image && (
+    <a href={`/${lang}/products/${slug}/`} class="block mb-4">
+      <Image 
+        src={image} 
+        alt={title} 
+        class="w-full h-auto object-cover rounded-md border border-slate-100"
+      />
+    </a>
+  )}
+
   <div class="flex items-center justify-between mb-4">
-    <h3 class="text-xl font-bold">
+    <h3 class="text-xl font-bold flex items-center gap-2">
+      {/* Optional Product Icon */}
+      {icon && (
+        <Image 
+          src={icon} 
+          alt={`${title} icon`} 
+          class="w-6 h-6 inline-block" 
+        />
+      )}
       <a href={`/${lang}/products/${slug}/`} class="text-blue-600 hover:text-blue-800">
         {title}
       </a>
     </h3>
+    
     {isNew && (
       <span class="bg-green-100 text-green-800 text-xs font-semibold px-2 py-1 rounded">
-        {t('new')}
+        {t('new') || 'NEW'}
       </span>
     )}
   </div>
-  {description && <p class="text-gray-600">{description}</p>}
+  
+  {/* description with 'grow' to push the link to the bottom if cards have different heights */}
+  {description && <p class="text-gray-600 grow">{description}</p>}
+  
   <div class="mt-4">
     <a href={`/${lang}/products/${slug}/`} class="text-sm font-medium text-blue-600 hover:underline">
       {t('viewBtn')} &rarr;

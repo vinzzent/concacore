@@ -124,7 +124,7 @@ const feed = [...posts, ...resources].sort((a, b) => b.published.valueOf() - a.p
             <div class="mt-auto pt-4 border-t border-slate-100 flex justify-between items-center text-sm">
               <time :datetime="item.published" class="text-brand-subtle font-mono text-xs" x-text="formatDate(item.published)"></time>
               <a :href="item.url" class="font-semibold text-brand-cyan hover:text-brand-cyan-dark flex items-center gap-1 transition-colors">
-                {t('viewBtn')} &rarr;
+                <span set:text={t('viewBtn')}></span> &rarr;
               </a>
             </div>
           </article>
