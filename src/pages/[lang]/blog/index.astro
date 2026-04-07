@@ -50,11 +50,11 @@ const resources = rawResources.map(res => {
 const feed = [...posts, ...resources].sort((a, b) => b.published.valueOf() - a.published.valueOf());
 ---
 
-<BaseLayout title={t('blog') || 'Blog'} lang={lang}>
+<BaseLayout title={t('blog')} lang={lang}>
   <div class="max-w-6xl mx-auto">
-    <h1 class="text-4xl font-bold text-brand-navy mb-8">{t('blog') || 'Blog'}</h1>
+    <h1 class="text-4xl font-bold text-brand-navy mb-8">{t('blog')}</h1>
     
-    <script define:vars={{ feed }}>
+    <script is:inline define:vars={{ feed }}>
       document.addEventListener('alpine:init', () => {
         Alpine.data('blogIndex', () => ({
           filterType: 'all',
@@ -62,23 +62,17 @@ const feed = [...posts, ...resources].sort((a, b) => b.published.valueOf() - a.p
           feed: feed,
           get filteredItems() {
             let result = this.feed;
-            
-            // Handle filtering
             if (this.filterType !== 'all') {
               result = result.filter(item => item.type === this.filterType);
             }
-            
-            // Handle sorting
             result = result.sort((a, b) => {
               const dateA = new Date(a.published).getTime();
               const dateB = new Date(b.published).getTime();
-              
               if (this.sortOrder === 'newest') return dateB - dateA;
               if (this.sortOrder === 'oldest') return dateA - dateB;
               if (this.sortOrder === 'title') return a.title.localeCompare(b.title);
               return 0;
             });
-            
             return result;
           },
           formatDate(dateStr) {
@@ -91,24 +85,27 @@ const feed = [...posts, ...resources].sort((a, b) => b.published.valueOf() - a.p
     </script>
 
     <div x-data="blogIndex()">
-      
       <div class="mb-8 flex flex-col sm:flex-row gap-4 p-4 bg-slate-50 rounded-lg border border-slate-200">
         <div class="flex-1">
-          <label class="block text-sm font-semibold text-brand-navy mb-1" for="filterType">Filter by Type</label>
+          <label class="block text-sm font-semibold text-brand-navy mb-1" for="filterType">
+            {t('filterBy')}
+          </label>
           <select id="filterType" x-model="filterType" class="w-full sm:w-auto bg-white border border-slate-300 text-sm rounded-md py-2 px-3 focus:ring-brand-cyan focus:border-brand-cyan">
-            <option value="all">All Content</option>
-            <option value="article">Articles</option>
-            <option value="internalResource">Internal Resources</option>
-            <option value="externalResource">External Resources</option>
+            <option value="all">{t('allFilter')}</option>
+            <option value="article">{t('article')}</option>
+            <option value="internalResource">{t('internalResource')}</option>
+            <option value="externalResource">{t('externalResource')}</option>
           </select>
         </div>
         
         <div class="flex-1 sm:text-right">
-          <label class="block text-sm font-semibold text-brand-navy mb-1" for="sortOrder">Sort by</label>
+          <label class="block text-sm font-semibold text-brand-navy mb-1" for="sortOrder">
+            {t('sortBy')}
+          </label>
           <select id="sortOrder" x-model="sortOrder" class="w-full sm:w-auto bg-white border border-slate-300 text-sm rounded-md py-2 px-3 focus:ring-brand-cyan focus:border-brand-cyan">
-            <option value="newest">Newest First</option>
-            <option value="oldest">Oldest First</option>
-            <option value="title">Title (A-Z)</option>
+            <option value="newest">{t('sortNewest')}</option>
+            <option value="oldest">{t('sortOldest')}</option>
+            <option value="title">{t('sortTitle')}</option>
           </select>
         </div>
       </div>
@@ -127,17 +124,16 @@ const feed = [...posts, ...resources].sort((a, b) => b.published.valueOf() - a.p
             <div class="mt-auto pt-4 border-t border-slate-100 flex justify-between items-center text-sm">
               <time :datetime="item.published" class="text-brand-subtle font-mono text-xs" x-text="formatDate(item.published)"></time>
               <a :href="item.url" class="font-semibold text-brand-cyan hover:text-brand-cyan-dark flex items-center gap-1 transition-colors">
-                {t('viewBtn') || 'View'} &rarr;
+                {t('viewBtn')} &rarr;
               </a>
             </div>
           </article>
         </template>
         
         <div x-show="filteredItems.length === 0" style="display: none;" class="col-span-full py-12 text-center text-slate-500 border border-dashed border-slate-300 rounded-lg">
-          No content matches your selected filters.
+          {t('noItems')}
         </div>
       </div>
-      
     </div>
   </div>
 </BaseLayout>

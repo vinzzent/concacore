@@ -5,7 +5,7 @@ description: "Escolher entre Apache Airflow e Prefect é, fundamentalmente, deci
 published: "2026-04-01"
 lang: "pt-br"
 type: "article"
-tags: ["blog", "article", "image-player"]
+tags: ["blog", "article"]
 layout: "blog-detail.njk"
 ---
 

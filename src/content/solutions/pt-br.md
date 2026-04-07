@@ -1,10 +1,8 @@
 ---
-title: Soluções
 lang: pt-br
-hero:
-  label: Soluções
-  title: Ajudamos organizações a transformar dados em ação.
-  subtitle: Construídas no Microsoft Fabric, nossas soluções conectam sua infraestrutura de dados às operações diárias da sua empresa...
+title: Soluções
+subtitle: Ajudamos organizações a transformar dados em ação.
+description: Construídas no Microsoft Fabric, nossas soluções conectam sua infraestrutura de dados às operações diárias da sua empresa — para que suas equipes passem menos tempo alternando entre ferramentas e mais tempo tomando decisões.
 ---
 
 ## Arquitetura de Dados Unificada

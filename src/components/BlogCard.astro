@@ -11,6 +11,7 @@ interface Props {
 const { post, lang } = Astro.props;
 const t = useTranslations(lang);
 const { title, description, published } = post.data;
+const slug = post.id.split('/').pop();
 ---
 
 <article class="border rounded-lg p-6 shadow-sm hover:shadow-md transition-shadow flex flex-col h-full">
@@ -19,7 +20,7 @@ const { title, description, published } = post.data;
       {published.toLocaleDateString(lang, { year: 'numeric', month: 'short', day: 'numeric' })}
     </time>
     <h3 class="text-xl font-bold mb-2">
-      <a href={`/${lang}/blog/${post.slug}/`} class="text-blue-600 hover:text-blue-800">
+      <a href={`/${lang}/blog/${slug}/`} class="text-blue-600 hover:text-blue-800">
         {title}
       </a>
     </h3>
@@ -27,7 +28,7 @@ const { title, description, published } = post.data;
   </div>
   
   <div class="mt-auto pt-4 border-t">
-    <a href={`/${lang}/blog/${post.slug}/`} class="text-sm font-medium text-blue-600 hover:underline inline-flex items-center">
+    <a href={`/${lang}/blog/${slug}/`} class="text-sm font-medium text-blue-600 hover:underline inline-flex items-center">
       {t('readMore')} <span class="ml-1">&rarr;</span>
     </a>
   </div>

@@ -11,12 +11,13 @@ interface Props {
 const { product, lang } = Astro.props;
 const t = useTranslations(lang);
 const { title, description, isNew } = product.data;
+const slug = product.id.split('/').pop();
 ---
 
 <article class="border rounded-lg p-6 shadow-sm hover:shadow-md transition-shadow">
   <div class="flex items-center justify-between mb-4">
     <h3 class="text-xl font-bold">
-      <a href={`/${lang}/products/${product.slug}/`} class="text-blue-600 hover:text-blue-800">
+      <a href={`/${lang}/products/${slug}/`} class="text-blue-600 hover:text-blue-800">
         {title}
       </a>
     </h3>
@@ -28,7 +29,7 @@ const { title, description, isNew } = product.data;
   </div>
   {description && <p class="text-gray-600">{description}</p>}
   <div class="mt-4">
-    <a href={`/${lang}/products/${product.slug}/`} class="text-sm font-medium text-blue-600 hover:underline">
+    <a href={`/${lang}/products/${slug}/`} class="text-sm font-medium text-blue-600 hover:underline">
       {t('viewBtn')} &rarr;
     </a>
   </div>

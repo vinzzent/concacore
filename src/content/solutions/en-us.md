@@ -1,10 +1,8 @@
 ---
-title: Solutions
 lang: en-us
-hero:
-  label: Solutions
-  title: We help organizations turn data into action.
-  subtitle: Built on Microsoft Fabric, our solutions connect your data infrastructure to your daily business operations — so your teams spend less time switching tools and more time making decisions.
+title: Solutions
+subtitle: We help organizations turn data into action.
+description: Built on Microsoft Fabric, our solutions connect your data infrastructure to your daily business operations — so your teams spend less time switching tools and more time making decisions.
 ---
 
 ## Unified Data Architecture

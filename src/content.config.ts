@@ -19,8 +19,7 @@ const blogCollection = defineCollection({
 const productsCollection = defineCollection({
   loader: glob({ pattern: "**/*.md", base: "./src/content/products" }),
   // Pass the built-in ({ image }) helper into the schema function
-  schema: ({ image }) => z.object({
-    id: z.string().optional(),
+  schema: ({ image }) => z.object({    
     title: z.string(),
     description: z.string().optional(),
     published: z.coerce.date(),
@@ -28,24 +27,20 @@ const productsCollection = defineCollection({
     icon: image().optional(),  // Automatically resolves local image strings
     image: image().optional(), // Automatically resolves local image strings
     isNew: z.boolean().default(false),
-    tags: z.array(z.string()).default([]),
-    layout: z.string().optional(),
-    email: z.string().email().optional(),
-    appsource: z.string().url().optional(),
-    repo: z.string().url().optional(),
+    tags: z.array(z.string()).default([]),    
+    email: z.email().optional(),
+    appsource: z.url().optional(),
+    repo: z.url().optional(),
   }),
 });
 
 const solutionsCollection = defineCollection({
   loader: glob({ pattern: "**/*.md", base: "./src/content/solutions" }),
-  schema: z.object({
-    title: z.string(),
+  schema: z.object({    
     lang: z.enum(['en-us', 'pt-br', 'en-US', 'pt-BR']),
-    hero: z.object({
-      label: z.string(),
-      title: z.string(),
-      subtitle: z.string(),
-    })
+    title: z.string(),
+    subtitle: z.string(),
+    description: z.string().optional(),    
   }),
 });
 

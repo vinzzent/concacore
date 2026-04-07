@@ -28,15 +28,15 @@ const relatedPosts = allPosts.filter(post => post.data.tags?.includes(slug));
   <div class="max-w-4xl mx-auto">
     <div class="border-b border-slate-200 pb-8 mb-8">
       <div class="flex items-center gap-4 mb-4">
-        {image && <Image src={image} alt={`${title} icon`} class="w-16 h-16 object-contain" />}
+        {icon && <Image src={icon} alt={`${title} icon`} class="w-16 h-16 object-contain" />}
         <h1 class="text-4xl font-bold text-brand-navy">{title}</h1>
       </div>
       
       {description && <p class="text-xl text-slate-600 mb-6">{description}</p>}
       
-      {icon && (
+      {image && (
         <div class="mb-8">
-          <Image src={icon} alt={`${title} preview`} class="w-full h-auto rounded-xl shadow-lg border border-slate-100" />
+          <Image src={image} alt={`${title} preview`} class="max-w-md w-full h-auto rounded-xl shadow-lg border border-slate-100" />
         </div>
       )}
       
@@ -90,7 +90,7 @@ const relatedPosts = allPosts.filter(post => post.data.tags?.includes(slug));
 
     {relatedPosts.length > 0 && (
       <div class="border-t border-slate-200 pt-10">
-        <h2 class="text-2xl font-bold text-brand-navy mb-6">Related from our Blog</h2>
+        <h2 class="text-2xl font-bold text-brand-navy mb-6">{t('relatedArticles')}</h2>
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
           {relatedPosts.map(post => (
             <BlogCard post={post} lang={lang} />

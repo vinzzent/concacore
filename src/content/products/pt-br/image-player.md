@@ -1,14 +1,12 @@
 ---
-id: "image-player"
+lang: "pt-br"
 title: "Image Player"
 description: "Um visual personalizado do Power BI para reproduzir uma sequência de imagens de forma fluida."
 published: "2026-03-25"
-lang: "pt-br"
-icon: "../../../assets/products/image-player.jpg"
-image: "../../../assets/products/image-player-icon.svg"
+icon: "../../../assets/products/image-player-icon.svg"
+image: "../../../assets/products/image-player.jpg"
 isNew: true
 tags: ["product", "power-bi"]
-layout: "product.njk"
 email: "support@seusite.com"
 appsource: "https://appsource.microsoft.com/en-us/product/power-bi-visuals/seu-produto"
 repo: "https://github.com/seu-usuario/image-sequence-player"

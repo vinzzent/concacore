@@ -1,14 +1,12 @@
 ---
-id: "image-player"
+lang: "en-us"
 title: "Image Sequence Player"
 description: "A custom Power BI visual to play a sequence of images fluidly."
 published: "2026-03-20"
-lang: "en-us"
-icon: "../../../assets/products/image-player.jpg"
-image: "../../../assets/products/image-player-icon.svg"
+icon: "../../../assets/products/image-player-icon.svg"
+image: "../../../assets/products/image-player.jpg"
 isNew: true
 tags: ["product", "power-bi"]
-layout: "product.njk"
 email: "support@seusite.com"
 appsource: "https://appsource.microsoft.com/en-us/product/power-bi-visuals/seu-produto"
 repo: "https://github.com/seu-usuario/image-sequence-player"
