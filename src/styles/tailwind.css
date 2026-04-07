@@ -18,8 +18,7 @@
   --color-brand-muted: #64748B;
   --color-brand-subtle: #94A3B8;
 
-  /* Typography - Mapeamento explícito para uso de font-display e font-mono */
-  --font-display: "Outfit", "Arial", sans-serif;
+  --font-sans: "Outfit", "Arial", sans-serif;
   --font-mono: "JetBrains Mono", "Consolas", monospace;
 
   /* Globals */
@@ -118,7 +117,7 @@
     cursor: pointer;
     transition: all 200ms ease;
     letter-spacing: 0.025em;
-    @apply font-display font-semibold text-sm;
+    @apply font-sans font-semibold text-sm;
   }
   
   .btn-primary { 
@@ -179,7 +178,7 @@
   padding-left: 2.25rem;
   padding-right: 2rem;
   transition: all 200ms ease;
-  @apply font-display text-sm border border-slate-200 rounded-md bg-brand-surface text-brand-text focus:outline-none focus:border-brand-cyan focus:ring-2 focus:ring-brand-cyan/20;
+  @apply font-sans text-sm border border-slate-200 rounded-md bg-brand-surface text-brand-text focus:outline-none focus:border-brand-cyan focus:ring-2 focus:ring-brand-cyan/20;
 }
 
 /* Fix Magnifying Glass Icon Position */

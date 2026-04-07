@@ -14,11 +14,19 @@ interface Props {
 const { title, description, lang } = Astro.props;
 const t = useTranslations(lang);
 
-// 1. Tipamos a constante 'products' inteira aqui no frontmatter
+// Fetching all products for the current language
 const products: CollectionEntry<'products'>[] = await getCollection(
   'products', 
   (entry: CollectionEntry<'products'>) => entry.data.lang.toLowerCase() === lang
 );
+
+// Language Switcher URL Generation
+const currentPath = Astro.url.pathname;
+const enUrl = currentPath.replace(/^\/(en-us|pt-br)/, '/en-us');
+const ptUrl = currentPath.replace(/^\/(en-us|pt-br)/, '/pt-br');
+
+// Check if we are in production build to avoid Pagefind 404s in dev mode
+const isProd = import.meta.env.PROD;
 ---
 
 <html lang={lang}>
@@ -27,11 +35,25 @@ const products: CollectionEntry<'products'>[] = await getCollection(
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>{title}</title>
     {description && <meta name="description" content={description} />}
+    
+    <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg" />
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    
+    {isProd && <link href="/pagefind/pagefind-ui.css" rel="stylesheet" />}
   </head>
-  <body class="bg-brand-bg text-brand-text font-sans antialiased flex flex-col min-h-screen">
+  
+  <body class="bg-brand-bg text-brand-text antialiased flex flex-col min-h-screen">
     <header class="border-b border-slate-200 py-4 bg-white shadow-sm z-50">
-      <nav class="container mx-auto flex gap-6 items-center">
-        <a href={`/${lang}/`} class="nav-link font-bold">{t('home')}</a>
+      <nav class="container mx-auto flex gap-6 items-center px-4">
+        
+        <a href={`/${lang}/`} class="shrink-0 mr-2 transition-transform hover:scale-105">
+          <img src="/assets/logo.svg" alt="Concacore Logo" class="h-8 w-auto" />
+        </a>
+
+        <a href={`/${lang}/`} class="nav-link font-bold hidden sm:block">{t('home') || 'Home'}</a>
         
         <div class="relative group" x-data="{ open: false }" @mouseleave="open = false">
           <button 
@@ -49,7 +71,6 @@ const products: CollectionEntry<'products'>[] = await getCollection(
             class="absolute top-full left-0 mt-2 w-56 bg-white border border-slate-200 rounded-md shadow-lg py-2 hidden group-hover:block"
             style="display: none;"
           >
-            {/* 2. O ".map()" agora é limpo, sem tipagem inline, evitando o erro de "Expression expected" */}
             {products.map((product) => {
               const slug = product.id.split('/').pop();
               return (
@@ -64,18 +85,80 @@ const products: CollectionEntry<'products'>[] = await getCollection(
           </div>
         </div>
 
-        <a href={`/${lang}/blog/`} class="nav-link">{t('blog')}</a>
-        <a href={`/${lang}/solutions/`} class="nav-link">{t('solutions')}</a>
+        <a href={`/${lang}/blog/`} class="nav-link">{t('blog') || 'Blog'}</a>
+        <a href={`/${lang}/solutions/`} class="nav-link">{t('solutions') || 'Solutions'}</a>
+
+        <div class="ml-auto relative min-w-50 hidden md:block">
+          <div id="search"></div>
+        </div>
+
+        <div class="flex items-center gap-2 border-l border-slate-300 pl-4 ml-2">
+          <a href={enUrl} class={`text-sm font-bold transition-opacity hover:text-brand-cyan ${lang === 'en-us' ? 'text-brand-cyan' : 'text-slate-400 hover:opacity-100'}`}>
+            EN
+          </a>
+          <span class="text-slate-300 text-sm">|</span>
+          <a href={ptUrl} class={`text-sm font-bold transition-opacity hover:text-brand-cyan ${lang === 'pt-br' ? 'text-brand-cyan' : 'text-slate-400 hover:opacity-100'}`}>
+            PT
+          </a>
+        </div>
       </nav>
     </header>
 
-    <main class="container mx-auto py-8 px-4 grow">
+    <main data-pagefind-body class="container mx-auto py-8 px-4 grow">
       <slot />
     </main>
 
-    <footer class="border-t border-slate-200 py-8 mt-12 text-center text-sm text-brand-muted bg-white">
-      <p>{t('footerTagline') || 'Turning data into action.'}</p>
-      <p>&copy; {new Date().getFullYear()} - {t('rights')} | {t('builtWith')}</p>
+    <footer class="border-t border-slate-200 py-12 mt-12 bg-white">
+      <div class="container mx-auto px-4 grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div>
+          <img src="/assets/logo.svg" alt="Concacore Logo" class="h-8 w-auto mb-4" />
+          <p class="text-sm text-brand-muted">{t('footerTagline') || 'Turning data into action.'}</p>
+        </div>
+        <div>
+          <h4 class="font-bold text-brand-navy mb-4">{t('products') || 'Products'}</h4>
+          <ul class="space-y-2">
+            {products.map(p => {
+                const slug = p.id.split('/').pop();
+                return (
+                  <li>
+                    <a href={`/${lang}/products/${slug}/`} class="text-sm text-brand-muted hover:text-brand-cyan transition-colors">
+                      {p.data.title}
+                    </a>
+                  </li>
+                );
+            })}
+          </ul>
+        </div>
+        <div>
+          <h4 class="font-bold text-brand-navy mb-4">Company</h4>
+          <ul class="space-y-2 text-sm">
+            <li><a href={`/${lang}/`} class="text-brand-muted hover:text-brand-cyan transition-colors">{t('home') || 'Home'}</a></li>
+            <li><a href={`/${lang}/blog/`} class="text-brand-muted hover:text-brand-cyan transition-colors">{t('blog') || 'Blog'}</a></li>
+            <li><a href={`/${lang}/solutions/`} class="text-brand-muted hover:text-brand-cyan transition-colors">{t('solutions') || 'Solutions'}</a></li>
+          </ul>
+        </div>
+      </div>
+      
+      <div class="container mx-auto px-4 border-t border-slate-100 pt-8 mt-8 text-center text-sm text-brand-muted">
+        <p>&copy; {new Date().getFullYear()} - {t('rights') || 'All rights reserved.'} | {t('builtWith') || 'Built with Astro'}</p>
+      </div>
     </footer>
+
+    {isProd && (
+      <>
+        <script is:inline src="/pagefind/pagefind-ui.js"></script>
+        <script is:inline>
+          window.addEventListener('DOMContentLoaded', (event) => {
+            if (typeof PagefindUI !== 'undefined') {
+              new PagefindUI({ 
+                element: '#search', 
+                showSubResults: true, 
+                showImages: false 
+              });
+            }
+          });
+        </script>
+      </>
+    )}
   </body>
 </html>

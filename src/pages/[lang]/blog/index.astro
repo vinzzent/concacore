@@ -1,6 +1,6 @@
 ---
 import { getCollection } from 'astro:content';
-import type { CollectionEntry } from 'astro:content'; // 1. Importar o tipo
+import type { CollectionEntry } from 'astro:content';
 import BaseLayout from '../../../layouts/BaseLayout.astro';
 import { getResourcesAsArray } from '../../../data/resources';
 import { useTranslations } from '../../../i18n/translations';
@@ -13,29 +13,26 @@ export function getStaticPaths() {
 const { lang } = Astro.params as { lang: Locale };
 const t = useTranslations(lang);
 
-// 2. Tipar rigorosamente a variável rawPosts e o parâmetro entry
 const rawPosts: CollectionEntry<'blog'>[] = await getCollection(
   'blog', 
   (entry: CollectionEntry<'blog'>) => entry.data.lang.toLowerCase() === lang
 );
 
+// Map posts and inject raw "type" for JS filtering
 const posts = rawPosts.map((post) => {
-  // Extract slug from path-based ID (e.g. "en-us/airflow-vs-prefect" -> "airflow-vs-prefect")
   const slug = post.id.split('/').pop(); 
-  
   return {
     id: slug as string,
     title: post.data.title,
     description: post.data.description,
     published: post.data.published,
     tag: t('article') || 'Article',
+    type: 'article', // Used by Alpine
     url: `/${lang}/blog/${slug}/`
   };
 });
 
-// 3. Busca os Recursos (Objeto JS)
 const rawResources = getResourcesAsArray();
-
 const resources = rawResources.map(res => {
   const localData = res.translations[lang];
   return {
@@ -44,35 +41,103 @@ const resources = rawResources.map(res => {
     description: localData.description,
     published: localData.published,
     tag: t(res.type as any) || res.type, 
+    type: res.type, // Used by Alpine
     url: `/${lang}/blog/${res.id}/`
   };
 });
 
-// 4. Mescla e Ordena por Data
+// Initial merge & sort
 const feed = [...posts, ...resources].sort((a, b) => b.published.valueOf() - a.published.valueOf());
 ---
 
 <BaseLayout title={t('blog') || 'Blog'} lang={lang}>
-  <h1 class="text-4xl font-bold text-brand-navy mb-8">{t('blog') || 'Blog'}</h1>
-  
-  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-    {/* Como "feed" é formado por objetos bem definidos lá em cima, "item" já é inferido automaticamente aqui em baixo! */}
-    {feed.map(item => (
-      <article class="border border-slate-200 bg-white rounded-lg p-6 flex flex-col h-full shadow-sm hover:shadow-md transition-shadow">
-        <span class="text-xs font-bold text-brand-cyan mb-2 uppercase tracking-wide">{item.tag}</span>
-        <h3 class="text-xl font-bold text-brand-navy mb-2 leading-tight">
-          <a href={item.url} class="hover:text-brand-cyan transition-colors">{item.title}</a>
-        </h3>
-        <p class="text-brand-muted mb-4 grow text-sm leading-relaxed">{item.description}</p>
-        <div class="mt-auto pt-4 border-t border-slate-100 flex justify-between items-center text-sm">
-          <time datetime={item.published.toISOString()} class="text-brand-subtle font-mono text-xs">
-            {item.published.toLocaleDateString(lang)}
-          </time>
-          <a href={item.url} class="font-semibold text-brand-cyan hover:text-brand-cyan-dark flex items-center gap-1 transition-colors">
-            {t('viewBtn') || 'View'} &rarr;
-          </a>
+  <div class="max-w-6xl mx-auto">
+    <h1 class="text-4xl font-bold text-brand-navy mb-8">{t('blog') || 'Blog'}</h1>
+    
+    <script define:vars={{ feed }}>
+      document.addEventListener('alpine:init', () => {
+        Alpine.data('blogIndex', () => ({
+          filterType: 'all',
+          sortOrder: 'newest',
+          feed: feed,
+          get filteredItems() {
+            let result = this.feed;
+            
+            // Handle filtering
+            if (this.filterType !== 'all') {
+              result = result.filter(item => item.type === this.filterType);
+            }
+            
+            // Handle sorting
+            result = result.sort((a, b) => {
+              const dateA = new Date(a.published).getTime();
+              const dateB = new Date(b.published).getTime();
+              
+              if (this.sortOrder === 'newest') return dateB - dateA;
+              if (this.sortOrder === 'oldest') return dateA - dateB;
+              if (this.sortOrder === 'title') return a.title.localeCompare(b.title);
+              return 0;
+            });
+            
+            return result;
+          },
+          formatDate(dateStr) {
+            return new Date(dateStr).toLocaleDateString(document.documentElement.lang, {
+              year: 'numeric', month: 'short', day: 'numeric'
+            });
+          }
+        }));
+      });
+    </script>
+
+    <div x-data="blogIndex()">
+      
+      <div class="mb-8 flex flex-col sm:flex-row gap-4 p-4 bg-slate-50 rounded-lg border border-slate-200">
+        <div class="flex-1">
+          <label class="block text-sm font-semibold text-brand-navy mb-1" for="filterType">Filter by Type</label>
+          <select id="filterType" x-model="filterType" class="w-full sm:w-auto bg-white border border-slate-300 text-sm rounded-md py-2 px-3 focus:ring-brand-cyan focus:border-brand-cyan">
+            <option value="all">All Content</option>
+            <option value="article">Articles</option>
+            <option value="internalResource">Internal Resources</option>
+            <option value="externalResource">External Resources</option>
+          </select>
         </div>
-      </article>
-    ))}
+        
+        <div class="flex-1 sm:text-right">
+          <label class="block text-sm font-semibold text-brand-navy mb-1" for="sortOrder">Sort by</label>
+          <select id="sortOrder" x-model="sortOrder" class="w-full sm:w-auto bg-white border border-slate-300 text-sm rounded-md py-2 px-3 focus:ring-brand-cyan focus:border-brand-cyan">
+            <option value="newest">Newest First</option>
+            <option value="oldest">Oldest First</option>
+            <option value="title">Title (A-Z)</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <template x-for="item in filteredItems" :key="item.id">
+          <article class="border border-slate-200 bg-white rounded-lg p-6 flex flex-col h-full shadow-sm hover:shadow-md transition-shadow">
+            <span class="text-xs font-bold text-brand-cyan mb-2 uppercase tracking-wide" x-text="item.tag"></span>
+            
+            <h3 class="text-xl font-bold text-brand-navy mb-2 leading-tight">
+              <a :href="item.url" class="hover:text-brand-cyan transition-colors" x-text="item.title"></a>
+            </h3>
+            
+            <p class="text-brand-muted mb-4 grow text-sm leading-relaxed" x-text="item.description"></p>
+            
+            <div class="mt-auto pt-4 border-t border-slate-100 flex justify-between items-center text-sm">
+              <time :datetime="item.published" class="text-brand-subtle font-mono text-xs" x-text="formatDate(item.published)"></time>
+              <a :href="item.url" class="font-semibold text-brand-cyan hover:text-brand-cyan-dark flex items-center gap-1 transition-colors">
+                {t('viewBtn') || 'View'} &rarr;
+              </a>
+            </div>
+          </article>
+        </template>
+        
+        <div x-show="filteredItems.length === 0" style="display: none;" class="col-span-full py-12 text-center text-slate-500 border border-dashed border-slate-300 rounded-lg">
+          No content matches your selected filters.
+        </div>
+      </div>
+      
+    </div>
   </div>
 </BaseLayout>

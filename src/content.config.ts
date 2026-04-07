@@ -1,5 +1,5 @@
-// src/content.config.ts
-import { defineCollection, z } from 'astro:content';
+import { defineCollection } from 'astro:content';
+import { z } from 'astro/zod'; // Correct import for Astro 6.x / 7.x
 import { glob } from 'astro/loaders';
 
 const blogCollection = defineCollection({
@@ -18,14 +18,15 @@ const blogCollection = defineCollection({
 
 const productsCollection = defineCollection({
   loader: glob({ pattern: "**/*.md", base: "./src/content/products" }),
-  schema: z.object({
+  // Pass the built-in ({ image }) helper into the schema function
+  schema: ({ image }) => z.object({
     id: z.string().optional(),
     title: z.string(),
     description: z.string().optional(),
     published: z.coerce.date(),
     lang: z.enum(['en-us', 'pt-br', 'en-US', 'pt-BR']),
-    icon: z.string().optional(),
-    image: z.string().optional(),
+    icon: image().optional(),  // Automatically resolves local image strings
+    image: image().optional(), // Automatically resolves local image strings
     isNew: z.boolean().default(false),
     tags: z.array(z.string()).default([]),
     layout: z.string().optional(),

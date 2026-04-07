@@ -1,6 +1,9 @@
 ---
 import BaseLayout from './BaseLayout.astro';
+import { Image } from 'astro:assets';
+import { getCollection } from 'astro:content';
 import type { CollectionEntry } from 'astro:content';
+import BlogCard from '../components/BlogCard.astro';
 import { useTranslations } from '../i18n/translations';
 import type { Locale } from '../i18n/translations';
 
@@ -11,29 +14,89 @@ interface Props {
 
 const { product, lang } = Astro.props;
 const t = useTranslations(lang);
-const { title, description, appsource } = product.data;
+const { title, description, appsource, icon, image, repo, email } = product.data;
+
+// Extract slug to match with related posts tags
+const slug = product.id.split('/').pop() || '';
+
+// Fetch related blog posts dynamically
+const allPosts = await getCollection('blog', (entry) => entry.data.lang.toLowerCase() === lang);
+const relatedPosts = allPosts.filter(post => post.data.tags?.includes(slug));
 ---
 
 <BaseLayout title={title} description={description} lang={lang}>
   <div class="max-w-4xl mx-auto">
-    <div class="border-b pb-8 mb-8">
-      <h1 class="text-4xl font-bold mb-4">{title}</h1>
-      {description && <p class="text-xl text-gray-600 mb-6">{description}</p>}
+    <div class="border-b border-slate-200 pb-8 mb-8">
+      <div class="flex items-center gap-4 mb-4">
+        {image && <Image src={image} alt={`${title} icon`} class="w-16 h-16 object-contain" />}
+        <h1 class="text-4xl font-bold text-brand-navy">{title}</h1>
+      </div>
+      
+      {description && <p class="text-xl text-slate-600 mb-6">{description}</p>}
+      
+      {icon && (
+        <div class="mb-8">
+          <Image src={icon} alt={`${title} preview`} class="w-full h-auto rounded-xl shadow-lg border border-slate-100" />
+        </div>
+      )}
       
       {appsource && (
         <a 
           href={appsource} 
           target="_blank" 
           rel="noopener noreferrer" 
-          class="inline-block bg-blue-600 text-white font-medium px-6 py-3 rounded hover:bg-blue-700 transition-colors"
+          class="inline-block bg-blue-600 text-white font-medium px-6 py-3 rounded hover:bg-blue-700 transition-colors shadow-sm"
         >
-          {t('getOnAppSource')}
+          {t('getOnAppSource') || 'Get it on AppSource'}
         </a>
       )}
     </div>
 
-    <div class="prose max-w-none">
+    <div class="prose prose-slate max-w-none mb-12">
       <slot />
     </div>
+
+    {(repo || email) && (
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-12">
+        {repo && (
+          <div class="bg-slate-50 border border-slate-200 p-6 rounded-lg">
+            <h3 class="text-lg font-bold text-brand-navy mb-3">Documentation</h3>
+            <ul class="space-y-2">
+              <li>
+                <a href={`${repo}#readme`} target="_blank" rel="noopener noreferrer" class="text-brand-cyan hover:underline flex items-center gap-1">
+                  Read the Docs <span aria-hidden="true">&rarr;</span>
+                </a>
+              </li>
+            </ul>
+          </div>
+        )}
+        
+        <div class="bg-slate-50 border border-slate-200 p-6 rounded-lg">
+          <h3 class="text-lg font-bold text-brand-navy mb-3">Support & Community</h3>
+          <ul class="space-y-2">
+            {repo && (
+              <>
+                <li><a href={`${repo}/issues`} target="_blank" rel="noopener noreferrer" class="text-brand-cyan hover:underline">Report an Issue</a></li>
+                <li><a href={`${repo}/discussions`} target="_blank" rel="noopener noreferrer" class="text-brand-cyan hover:underline">Join Discussions</a></li>
+              </>
+            )}
+            {email && (
+              <li><a href={`mailto:${email}`} class="text-brand-cyan hover:underline">Email Support</a></li>
+            )}
+          </ul>
+        </div>
+      </div>
+    )}
+
+    {relatedPosts.length > 0 && (
+      <div class="border-t border-slate-200 pt-10">
+        <h2 class="text-2xl font-bold text-brand-navy mb-6">Related from our Blog</h2>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+          {relatedPosts.map(post => (
+            <BlogCard post={post} lang={lang} />
+          ))}
+        </div>
+      </div>
+    )}
   </div>
 </BaseLayout>
