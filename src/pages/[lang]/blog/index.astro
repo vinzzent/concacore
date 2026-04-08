@@ -28,7 +28,7 @@ const posts = rawPosts.map((post) => {
     published: post.data.published,
     tag: t('article') || 'Article',
     type: 'article', // Used by Alpine
-    url: `/${lang}/blog/${slug}/`
+    url: `${import.meta.env.BASE_URL}${lang}/blog/${slug}/`
   };
 });
 
@@ -42,7 +42,7 @@ const resources = rawResources.map(res => {
     published: localData.published,
     tag: t(res.type as any) || res.type, 
     type: res.type, // Used by Alpine
-    url: `/${lang}/blog/${res.id}/`
+    url: `${import.meta.env.BASE_URL}${lang}/blog/${res.id}/`
   };
 });
 
@@ -52,8 +52,10 @@ const feed = [...posts, ...resources].sort((a, b) => b.published.valueOf() - a.p
 
 <BaseLayout title={t('blog')} lang={lang}>
   <div class="max-w-6xl mx-auto">
-    <h1 class="text-4xl font-bold text-brand-navy mb-8">{t('blog')}</h1>
-    
+    <header class="text-center py-16">
+      <h1 class="text-5xl font-extrabold text-brand-navy leading-tight">{t('blog')}</h1>
+    </header>
+      
     <script is:inline define:vars={{ feed }}>
       document.addEventListener('alpine:init', () => {
         Alpine.data('blogIndex', () => ({

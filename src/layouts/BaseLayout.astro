@@ -21,10 +21,11 @@ const products: CollectionEntry<"products">[] = await getCollection(
     entry.data.lang.toLowerCase() === lang,
 );
 
-// Language Switcher URL Generation
+// Language Switcher URL Generation (UPDATED FOR BASE_URL)
 const currentPath = Astro.url.pathname;
-const enUrl = currentPath.replace(/^\/(en-us|pt-br)/, "/en-us");
-const ptUrl = currentPath.replace(/^\/(en-us|pt-br)/, "/pt-br");
+const base = import.meta.env.BASE_URL; // Astro guarantees this ends with a '/'
+const enUrl = currentPath.replace(new RegExp(`^${base}(en-us|pt-br)`), `${base}en-us`);
+const ptUrl = currentPath.replace(new RegExp(`^${base}(en-us|pt-br)`), `${base}pt-br`);
 
 // Check if we are in production build to avoid Pagefind 404s in dev mode
 const isProd = import.meta.env.PROD;
@@ -37,7 +38,7 @@ const isProd = import.meta.env.PROD;
     <title>{title}</title>
     {description && <meta name="description" content={description} />}
 
-    <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg" />
+    <link rel="icon" type="image/svg+xml" href={`${import.meta.env.BASE_URL}assets/favicon.svg`} />
 
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -45,11 +46,7 @@ const isProd = import.meta.env.PROD;
       href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap"
       rel="stylesheet"
     />   
-    {
-      isProd && (
-        <link href="/pagefind/pagefind-component-ui.css" rel="stylesheet" />
-      )
-    }
+    {isProd && <link href={`${import.meta.env.BASE_URL}pagefind/pagefind-component-ui.css`} rel="stylesheet" />}
   </head>
 
   <body
@@ -58,13 +55,13 @@ const isProd = import.meta.env.PROD;
     <header class="border-b border-slate-200 py-4 bg-white shadow-sm z-50">
       <nav class="container mx-auto flex gap-6 items-center px-4">
         <a
-          href={`/${lang}/`}
+          href={`${import.meta.env.BASE_URL}${lang}/`}
           class="shrink-0 mr-2 transition-transform hover:scale-105"
         >
-          <img src="/assets/logo.svg" alt="Concacore Logo" class="h-8 w-auto" />
+          <img src={`${import.meta.env.BASE_URL}assets/logo.svg`} alt="Concacore Logo" class="h-12 w-auto" />
         </a>
 
-        <a href={`/${lang}/`} class="nav-link font-bold hidden sm:block"
+        <a href={`${import.meta.env.BASE_URL}${lang}/`} class="nav-link font-bold hidden sm:block"
           >{t("home") || "Home"}</a
         >
 
@@ -101,7 +98,7 @@ const isProd = import.meta.env.PROD;
                 const slug = product.id.split("/").pop();
                 return (
                   <a
-                    href={`/${lang}/products/${slug}/`}
+                    href={`${import.meta.env.BASE_URL}${lang}/products/${slug}/`}
                     @click="open = false"
                     class="block px-4 py-2 text-sm text-brand-text hover:bg-brand-surface hover:text-brand-cyan transition-colors"
                   >
@@ -113,8 +110,8 @@ const isProd = import.meta.env.PROD;
           </div>
         </div>
 
-        <a href={`/${lang}/blog/`} class="nav-link">{t("blog") || "Blog"}</a>
-        <a href={`/${lang}/solutions/`} class="nav-link"
+        <a href={`${import.meta.env.BASE_URL}${lang}/blog/`} class="nav-link">{t("blog") || "Blog"}</a>
+        <a href={`${import.meta.env.BASE_URL}${lang}/solutions/`} class="nav-link"
           >{t("solutions") || "Solutions"}</a
         >
 
@@ -149,11 +146,7 @@ const isProd = import.meta.env.PROD;
     <footer class="border-t border-slate-200 py-12 mt-12 bg-white">
       <div class="container mx-auto px-4 grid grid-cols-1 md:grid-cols-3 gap-8">
         <div>
-          <img
-            src="/assets/logo.svg"
-            alt="Concacore Logo"
-            class="h-8 w-auto mb-4"
-          />
+          <img src={`${import.meta.env.BASE_URL}assets/logo.svg`} alt="Concacore Logo" class="h-8 w-auto mb-4" />
           <p class="text-sm text-brand-muted">
             {t("footerTagline") || "Turning data into action."}
           </p>
@@ -169,7 +162,7 @@ const isProd = import.meta.env.PROD;
                 return (
                   <li>
                     <a
-                      href={`/${lang}/products/${slug}/`}
+                      href={`${import.meta.env.BASE_URL}${lang}/products/${slug}/`}
                       class="text-sm text-brand-muted hover:text-brand-cyan transition-colors"
                     >
                       {p.data.title}
@@ -181,23 +174,23 @@ const isProd = import.meta.env.PROD;
           </ul>
         </div>
         <div>
-          <h4 class="font-bold text-brand-navy mb-4">Company</h4>
+          <h4 class="font-bold text-brand-navy mb-4">{t("company")}</h4>
           <ul class="space-y-2 text-sm">
             <li>
               <a
-                href={`/${lang}/`}
+                href={`${import.meta.env.BASE_URL}${lang}/`}
                 class="text-brand-muted hover:text-brand-cyan transition-colors"
                 >{t("home") || "Home"}</a>
             </li>
             <li>
               <a
-                href={`/${lang}/blog/`}
+                href={`${import.meta.env.BASE_URL}${lang}/blog/`}
                 class="text-brand-muted hover:text-brand-cyan transition-colors"
                 >{t("blog") || "Blog"}</a>
             </li>
             <li>
               <a
-                href={`/${lang}/solutions/`}
+                href={`${import.meta.env.BASE_URL}${lang}/solutions/`}
                 class="text-brand-muted hover:text-brand-cyan transition-colors"
                 >{t("solutions") || "Solutions"}</a>
             </li>
@@ -209,13 +202,14 @@ const isProd = import.meta.env.PROD;
         class="container mx-auto px-4 border-t border-slate-100 pt-8 mt-8 text-center text-sm text-brand-muted"
       >
         <p>
-          &copy; {new Date().getFullYear()} - {
-            t("rights") || "All rights reserved."
-          } | {t("builtWith") || "Built with Astro"}
+          &copy; {new Date().getFullYear()} • {
+            t("rights") || "All rights reserved"
+          } • {t("builtWith") || "Built with Astro"
+          } • {t("searchPoweredBy") || "Search powered by Pagefind"}
         </p>
       </div>
     </footer>
 
-    {isProd && <script is:inline src="/pagefind/pagefind-component-ui.js" />}
+    {isProd && <script is:inline src={`${import.meta.env.BASE_URL}pagefind/pagefind-component-ui.js`} />}
   </body>
 </html>

@@ -26,13 +26,13 @@ export const resources: Record<string, Omit<ResourceData, 'id'>> = {
       "en-us": {
         title: "Product Guide",
         description: "Full guide to our product ecosystem.",
-        source: "/assets/product-guide.pdf",
+        source: `${import.meta.env.BASE_URL}assets/product-guide.pdf`,
         published: new Date("2026-03-28")
       },
       "pt-br": {
         title: "Guia do Produto",
         description: "Guia completo do nosso ecossistema de produtos.",
-        source: "/assets/product-guide.pdf",
+        source: `${import.meta.env.BASE_URL}assets/product-guide.pdf`,
         published: new Date("2026-04-05")
       }
     }

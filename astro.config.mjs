@@ -6,6 +6,8 @@ import tailwindcss from '@tailwindcss/vite';
 import icon from 'astro-icon';
 
 export default defineConfig({
+  site: 'https://vinzzent.github.io',
+  base: '/concacore-site',
   integrations: [alpinejs(), icon()],
   vite: {
     plugins: [

@@ -22,14 +22,14 @@ const products = await getCollection('products', (entry) => {
 ---
 
 <BaseLayout title={t('home') || 'Home'} description={t('defaultDescription') || ''} lang={lang}>
-  <section class="text-center py-20">
-    <h1 class="text-5xl font-extrabold mb-6">{t('defaultDescription')}</h1>
-    <p class="text-xl text-gray-600 mb-12">{t('footerTagline')}</p>
+  <header class="text-center py-16 border-b border-slate-200 mb-12">
+    <h1 class="text-5xl font-extrabold text-brand-navy mb-6 leading-tight">{t('defaultDescription')}</h1>
+    <p class="text-xl text-brand-muted leading-relaxed max-w-3xl mx-auto mb-2">{t('footerTagline')}</p>
+  </header>
     
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6 max-w-4xl mx-auto text-left">
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl mx-auto text-left">
       {products.map((product) => (
         <ProductCard product={product} lang={lang} />
       ))}
-    </div>
-  </section>
+  </div>
 </BaseLayout>

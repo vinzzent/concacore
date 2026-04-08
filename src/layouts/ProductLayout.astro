@@ -30,10 +30,10 @@ const relatedPosts = allPosts.filter(post => post.data.tags?.includes(slug));
     <div class="border-b border-slate-200 pb-8 mb-8">
       <div class="flex items-center gap-4 mb-4">
         {icon && <Image src={icon} alt={`${title} icon`} class="w-16 h-16 object-contain" />}
-        <h1 class="text-4xl font-bold text-brand-navy">{title}</h1>
+        <h1 class="text-4xl font-extrabold text-brand-navy">{title}</h1>
       </div>
       
-      {description && <p class="text-xl text-slate-600 mb-6">{description}</p>}
+      {description && <p class="text-xl text-brand-muted leading-relaxed mb-6">{description}</p>}
       
       {image && (
         <div class="mb-8">
