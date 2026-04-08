@@ -6,6 +6,7 @@ import type { CollectionEntry } from 'astro:content';
 import BlogCard from '../components/BlogCard.astro';
 import { useTranslations } from '../i18n/translations';
 import type { Locale } from '../i18n/translations';
+import { Icon } from 'astro-icon/components'; // <-- Imported Astro Icon
 
 interface Props {
   product: CollectionEntry<'products'>;
@@ -63,8 +64,9 @@ const relatedPosts = allPosts.filter(post => post.data.tags?.includes(slug));
             <h3 class="text-lg font-bold text-brand-navy mb-3">Documentation</h3>
             <ul class="space-y-2">
               <li>
-                <a href={`${repo}#readme`} target="_blank" rel="noopener noreferrer" class="text-brand-cyan hover:underline flex items-center gap-1">
-                  Read the Docs <span aria-hidden="true">&rarr;</span>
+                <a href={`${repo}#readme`} target="_blank" rel="noopener noreferrer" class="text-brand-cyan hover:text-brand-cyan-dark transition-colors flex items-center gap-1.5 w-fit">
+                  Read the Docs 
+                  <Icon name="heroicons:arrow-top-right-on-square" class="w-4 h-4 opacity-80" aria-hidden="true" />
                 </a>
               </li>
             </ul>
@@ -76,12 +78,27 @@ const relatedPosts = allPosts.filter(post => post.data.tags?.includes(slug));
           <ul class="space-y-2">
             {repo && (
               <>
-                <li><a href={`${repo}/issues`} target="_blank" rel="noopener noreferrer" class="text-brand-cyan hover:underline">Report an Issue</a></li>
-                <li><a href={`${repo}/discussions`} target="_blank" rel="noopener noreferrer" class="text-brand-cyan hover:underline">Join Discussions</a></li>
+                <li>
+                  <a href={`${repo}/issues`} target="_blank" rel="noopener noreferrer" class="text-brand-cyan hover:text-brand-cyan-dark transition-colors flex items-center gap-1.5 w-fit">
+                    Report an Issue 
+                    <Icon name="heroicons:arrow-top-right-on-square" class="w-4 h-4 opacity-80" aria-hidden="true" />
+                  </a>
+                </li>
+                <li>
+                  <a href={`${repo}/discussions`} target="_blank" rel="noopener noreferrer" class="text-brand-cyan hover:text-brand-cyan-dark transition-colors flex items-center gap-1.5 w-fit">
+                    Join Discussions 
+                    <Icon name="heroicons:arrow-top-right-on-square" class="w-4 h-4 opacity-80" aria-hidden="true" />
+                  </a>
+                </li>
               </>
             )}
             {email && (
-              <li><a href={`mailto:${email}`} class="text-brand-cyan hover:underline">Email Support</a></li>
+              <li>
+                <a href={`mailto:${email}`} class="text-brand-cyan hover:text-brand-cyan-dark transition-colors flex items-center gap-1.5 w-fit">
+                  <Icon name="heroicons:envelope" class="w-4 h-4 opacity-80" aria-hidden="true" /> 
+                  Email Support
+                </a>
+              </li>
             )}
           </ul>
         </div>

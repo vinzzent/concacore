@@ -1,6 +1,6 @@
 ---
 lang: "pt-br"
-title: "Image Player"
+title: "Image Sequence Player"
 description: "Um visual personalizado do Power BI para reproduzir uma sequência de imagens de forma fluida."
 published: "2026-03-25"
 icon: "../../../assets/products/image-player-icon.svg"

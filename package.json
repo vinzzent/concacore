@@ -9,16 +9,18 @@
     "dev": "astro dev",
     "build": "astro build && pagefind --site dist",
     "preview": "astro preview",
-    "astro": "astro"  
+    "astro": "astro"
   },
   "dependencies": {
-    "@astrojs/alpinejs": "0.5.0",
-    "alpinejs": "3.15.11",
-    "astro": "6.1.4"
+    "alpinejs": "3.15.11"
   },
   "devDependencies": {
+    "@astrojs/alpinejs": "0.5.0",
+    "@iconify-json/heroicons": "1.2.3",
     "@tailwindcss/typography": "0.5.19",
     "@tailwindcss/vite": "4.2.2",
+    "astro": "6.1.4",
+    "astro-icon": "1.1.5",
     "pagefind": "1.5.0",
     "tailwindcss": "4.2.2"
   }
