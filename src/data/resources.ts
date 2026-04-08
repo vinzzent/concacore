@@ -17,6 +17,9 @@ export interface ResourceData {
   translations: Record<Locale, LocalizedResource>;
 }
 
+const rawBase = import.meta.env.BASE_URL;
+const base = rawBase.endsWith('/') ? rawBase : `${rawBase}/`;
+
 // O dicionário unificado
 export const resources: Record<string, Omit<ResourceData, 'id'>> = {
   "product-guide": {
@@ -26,13 +29,13 @@ export const resources: Record<string, Omit<ResourceData, 'id'>> = {
       "en-us": {
         title: "Product Guide",
         description: "Full guide to our product ecosystem.",
-        source: `${import.meta.env.BASE_URL}assets/product-guide.pdf`,
+        source: `${base}assets/product-guide.pdf`,
         published: new Date("2026-03-28")
       },
       "pt-br": {
         title: "Guia do Produto",
         description: "Guia completo do nosso ecossistema de produtos.",
-        source: `${import.meta.env.BASE_URL}assets/product-guide.pdf`,
+        source: `${base}assets/product-guide.pdf`,
         published: new Date("2026-04-05")
       }
     }

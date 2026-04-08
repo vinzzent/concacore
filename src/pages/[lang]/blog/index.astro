@@ -13,6 +13,9 @@ export function getStaticPaths() {
 const { lang } = Astro.params as { lang: Locale };
 const t = useTranslations(lang);
 
+const rawBase = import.meta.env.BASE_URL;
+const base = rawBase.endsWith('/') ? rawBase : `${rawBase}/`;
+
 const rawPosts: CollectionEntry<'blog'>[] = await getCollection(
   'blog', 
   (entry: CollectionEntry<'blog'>) => entry.data.lang.toLowerCase() === lang
@@ -28,7 +31,7 @@ const posts = rawPosts.map((post) => {
     published: post.data.published,
     tag: t('article') || 'Article',
     type: 'article', // Used by Alpine
-    url: `${import.meta.env.BASE_URL}${lang}/blog/${slug}/`
+    url: `${base}${lang}/blog/${slug}/`
   };
 });
 
@@ -42,7 +45,7 @@ const resources = rawResources.map(res => {
     published: localData.published,
     tag: t(res.type as any) || res.type, 
     type: res.type, // Used by Alpine
-    url: `${import.meta.env.BASE_URL}${lang}/blog/${res.id}/`
+    url: `${base}${lang}/blog/${res.id}/`
   };
 });
 

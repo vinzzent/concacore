@@ -20,7 +20,8 @@ const t = useTranslations(lang);
     <header class="mb-8 border-b pb-6">
       <div class="flex items-center gap-3 mb-4">
         <span class="bg-blue-100 text-blue-800 text-xs font-semibold px-2.5 py-0.5 rounded">
-          {t(type)} </span>
+          {t(type)} 
+        </span>
       </div>
       <h1 class="text-4xl font-extrabold mb-4">{resource.title}</h1>
       <p class="text-xl text-gray-600 mb-4">{resource.description}</p>
@@ -29,7 +30,7 @@ const t = useTranslations(lang);
       </time>
     </header>
 
-    <div class="bg-gray-50 rounded-lg p-4 md:p-8 flex justify-center">
+    <div class="bg-gray-50 rounded-lg p-4 md:p-8 flex justify-center w-full">
       {format === 'video' ? (
         <iframe 
           class="w-full aspect-video rounded shadow-lg"
@@ -39,9 +40,18 @@ const t = useTranslations(lang);
           allowfullscreen>
         </iframe>
       ) : (
-        <div class="text-center py-12">
-          <p class="mb-6 text-gray-600">{t('documentation')}</p>
-          <a href={resource.source} target="_blank" class="bg-blue-600 text-white px-8 py-3 rounded hover:bg-blue-700 transition">
+        <div class="w-full flex flex-col items-center gap-6">
+          <iframe 
+            class="w-full h-150 md:h-200 rounded shadow-lg border border-gray-200 bg-white"
+            src={resource.source} 
+            title={resource.title}>
+          </iframe>
+          
+          <a 
+            href={resource.source} 
+            target="_blank" 
+            class="bg-blue-600 text-white px-8 py-3 rounded hover:bg-blue-700 transition font-medium"
+          >
             {t('viewBtn')} PDF
           </a>
         </div>
