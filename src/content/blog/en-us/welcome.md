@@ -1,12 +1,10 @@
 ---
+lang: "en-us"
 id: "welcome-to-blog"
 title: "Welcome to Our Unified Blog"
 description: "Discover our new multilingual, AI-ready architecture for articles and resources."
 published: "2026-04-01"
-lang: "en-us"
-type: "article"
 tags: ["blog", "article"]
-layout: "blog-detail.njk"
 ---
 
 # Welcome to the Concacore Blog

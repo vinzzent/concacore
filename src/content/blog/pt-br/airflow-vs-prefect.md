@@ -1,12 +1,10 @@
 ---
+lang: "pt-br"
 id: "airflow-vs-prefect"
 title: "Airflow vs. Prefect: Guia de Arquitetura e Escolha para Times de Dados"
 description: "Escolher entre Apache Airflow e Prefect é, fundamentalmente, decidir entre paradigmas de execução e capacidade operacional. Este guia detalha as capacidades comprovadas de ambas as ferramentas, com foco em stacks de dados modernas e orquestração de IA."
 published: "2026-04-01"
-lang: "pt-br"
-type: "article"
 tags: ["blog", "article"]
-layout: "blog-detail.njk"
 ---
 
 ![Airflow vs Prefect Comparison](../../../assets/blog/airflow-vs-prefect.png)

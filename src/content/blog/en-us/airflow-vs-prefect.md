@@ -1,12 +1,10 @@
 ---
+lang: "en-us"
 id: "airflow-vs-prefect"
 title: "Airflow vs. Prefect: Architecture & Selection Guide for Data Teams"
 description: "Choosing between Apache Airflow and Prefect is fundamentally a decision about execution paradigms and operational capacity. This guide breaks down the proven capabilities of both tools, with a specific focus on modern data stacks and AI orchestration."
 published: "2026-04-01"
-lang: "en-us"
-type: "article"
 tags: ["blog", "article"]
-layout: "blog-detail.njk"
 --- 
 
 ![Airflow vs Prefect Comparison](../../../assets/blog/airflow-vs-prefect.png)

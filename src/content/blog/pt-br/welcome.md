@@ -1,12 +1,10 @@
 ---
+lang: "pt-br"
 id: "welcome-to-blog"
 title: "Bem-vindo ao Nosso Blog Unificado"
 description: "Descubra nossa nova arquitetura multilíngue, pronta para IA, para artigos e recursos."
 published: "2026-04-01"
-lang: "pt-br"
-type: "article"
 tags: ["blog", "article"]
-layout: "blog-detail.njk"
 ---
 
 # Bem-vindo ao Blog Concacore
