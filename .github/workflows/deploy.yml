@@ -19,10 +19,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout your repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6.0.2 # Fully updated, runs on Node 24 natively
 
       - name: Setup Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v6.3.0 # Fully updated, runs on Node 24 natively
         with:
           node-version: '24'
           cache: 'npm'
@@ -34,7 +34,7 @@ jobs:
         run: npm run build
 
       - name: Upload Pages Artifact
-        uses: actions/upload-pages-artifact@v5.0.0 # Using explicit v5.0.0 tag because floating v5 is missing upstream
+        uses: actions/upload-pages-artifact@v5.0.0 # Bypassing the missing floating tag bug
         with:
           path: ./dist
 
@@ -48,4 +48,4 @@ jobs:
     steps:
       - name: Deploy to GitHub Pages
         id: deployment
-        uses: actions/deploy-pages@v5
+        uses: actions/deploy-pages@v5.0.0 # Updated deployment action
