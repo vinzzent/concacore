@@ -7,7 +7,7 @@ import icon from 'astro-icon';
 
 export default defineConfig({
   site: 'https://vinzzent.github.io',
-  base: '/concacore-site',
+  base: '/concacore',
   integrations: [alpinejs(), icon()],
   vite: {
     plugins: [

@@ -1,0 +1,46 @@
+---
+// Adjust the import path to wherever you saved the layout code you provided
+import BaseLayout from "../layouts/BaseLayout.astro";
+
+// The 404 page sits at the root, so it doesn't have a dynamic language param.
+// We set a default language here (you can change this to "pt-br" if you prefer).
+const defaultLang = "en-us";
+const base = import.meta.env.BASE_URL.endsWith('/') 
+  ? import.meta.env.BASE_URL 
+  : `${import.meta.env.BASE_URL}/`;
+---
+
+<BaseLayout title="404 - Page Not Found" lang={defaultLang}>
+  <div class="flex flex-col items-center justify-center text-center py-20 my-auto">
+    
+    <img src={`${base}assets/logo.svg`} alt="Concacore Logo" class="h-24 w-auto mb-8 opacity-50 grayscale" />
+    
+    <h1 class="text-7xl font-extrabold text-brand-navy mb-4">404</h1>
+    <h2 class="text-3xl font-bold text-brand-text mb-6">Page Not Found</h2>
+    
+    <div class="text-brand-muted mb-8 max-w-md mx-auto">
+      <p>The page you are looking for doesn't exist or has been moved.</p>
+      
+      <div class="mt-6 p-3 bg-slate-100 rounded-md border border-slate-200 inline-block text-left">
+        <span class="text-sm text-slate-500">Attempted path:</span><br/>
+        <span id="path-display" class="font-mono text-brand-cyan break-all"></span>
+      </div>
+    </div>
+
+    <a 
+      href={`${base}${defaultLang}/`} 
+      class="px-8 py-3 bg-brand-navy text-white font-bold rounded-md hover:bg-brand-cyan transition-colors"
+    >
+      Return Home
+    </a>
+  </div>
+
+  <script>
+    // This runs in the browser, ensuring it captures the real broken URL 
+    // the user typed, even though this is a pre-built static SSG page.
+    const pathDisplay = document.getElementById('path-display');
+    if (pathDisplay) {
+      pathDisplay.textContent = window.location.pathname;
+    }
+  </script>
+</BaseLayout>
