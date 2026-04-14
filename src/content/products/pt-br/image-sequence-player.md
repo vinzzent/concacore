@@ -7,9 +7,9 @@ icon: "../../../assets/products/image-player-icon.svg"
 image: "../../../assets/products/image-player.jpg"
 isNew: true
 tags: ["product", "power-bi"]
-email: "support@seusite.com"
+email: "contact.concacore@gmail.com"
 appsource: "https://appsource.microsoft.com/en-us/product/power-bi-visuals/seu-produto"
-repo: "https://github.com/seu-usuario/image-sequence-player"
+repo: "https://github.com/vinzzent/image-sequence-player"
 ---
 
 Nosso visual personalizado para **Power BI**. O Image Sequence Player permite animar e reproduzir, de forma fluida, uma sequência de imagens diretamente nos seus dashboards, transformando relatórios estáticos em uma narrativa visual dinâmica.
