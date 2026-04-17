@@ -58,14 +58,32 @@ const relatedPosts = allPosts.filter(post => post.data.tags?.includes(slug));
     </div>
 
     {(repo || email) && (
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-12">
+      <div class={`grid grid-cols-1 ${repo ? 'md:grid-cols-2' : ''} gap-6 mb-12`}>
         {repo && (
           <div class="bg-slate-50 border border-slate-200 p-6 rounded-lg">
-            <h3 class="text-lg font-bold text-brand-navy mb-3">Documentation</h3>
+            <h3 class="text-lg font-bold text-brand-navy mb-3">{t('documentation') || 'Documentation'}</h3>
             <ul class="space-y-2">
               <li>
                 <a href={`${repo}#readme`} target="_blank" rel="noopener noreferrer" class="text-brand-cyan hover:text-brand-cyan-dark transition-colors flex items-center gap-1.5 w-fit">
-                  Read the Docs 
+                  {t('officialReadme') || 'Read the Documentation'}
+                  <Icon name="heroicons:arrow-top-right-on-square" class="w-4 h-4 opacity-80" aria-hidden="true" />
+                </a>
+              </li>
+              <li>
+                <a href={`${repo}/blob/main/PRIVACY.txt`} target="_blank" rel="noopener noreferrer" class="text-brand-cyan hover:text-brand-cyan-dark transition-colors flex items-center gap-1.5 w-fit">
+                  {t('privacyPolicy') || 'Privacy Policy'}
+                  <Icon name="heroicons:arrow-top-right-on-square" class="w-4 h-4 opacity-80" aria-hidden="true" />
+                </a>
+              </li>
+              <li>
+                <a href={`${repo}/blob/main/EULA.txt`} target="_blank" rel="noopener noreferrer" class="text-brand-cyan hover:text-brand-cyan-dark transition-colors flex items-center gap-1.5 w-fit">
+                  {t('eula') || 'End User License Agreement'}
+                  <Icon name="heroicons:arrow-top-right-on-square" class="w-4 h-4 opacity-80" aria-hidden="true" />
+                </a>
+              </li>
+              <li>
+                <a href={`${repo}/blob/main/LICENSE.txt`} target="_blank" rel="noopener noreferrer" class="text-brand-cyan hover:text-brand-cyan-dark transition-colors flex items-center gap-1.5 w-fit">
+                  {t('sourceCodeLicense') || 'Source Code License (MIT)'}
                   <Icon name="heroicons:arrow-top-right-on-square" class="w-4 h-4 opacity-80" aria-hidden="true" />
                 </a>
               </li>
@@ -74,29 +92,36 @@ const relatedPosts = allPosts.filter(post => post.data.tags?.includes(slug));
         )}
         
         <div id="support" class="bg-slate-50 border border-slate-200 p-6 rounded-lg">
-          <h3 class="text-lg font-bold text-brand-navy mb-3">Support & Community</h3>
+          <h3 class="text-lg font-bold text-brand-navy mb-3">{t('support') || 'Support'}</h3>
           <ul class="space-y-2">
             {repo && (
               <>
                 <li>
+                  <a href={`${repo}/blob/main/SUPPORT.md`} target="_blank" rel="noopener noreferrer" class="text-brand-cyan hover:text-brand-cyan-dark transition-colors flex items-center gap-1.5 w-fit">
+                    {t('supportPolicy') || 'Support Policy'}
+                  <Icon name="heroicons:arrow-top-right-on-square" class="w-4 h-4 opacity-80" aria-hidden="true" />
+                  </a>
+                </li>
+                <li>
                   <a href={`${repo}/issues`} target="_blank" rel="noopener noreferrer" class="text-brand-cyan hover:text-brand-cyan-dark transition-colors flex items-center gap-1.5 w-fit">
-                    Report an Issue 
+                    {t('githubIssues') || 'Report a Bug via GitHub Issues'}
                     <Icon name="heroicons:arrow-top-right-on-square" class="w-4 h-4 opacity-80" aria-hidden="true" />
                   </a>
                 </li>
                 <li>
                   <a href={`${repo}/discussions`} target="_blank" rel="noopener noreferrer" class="text-brand-cyan hover:text-brand-cyan-dark transition-colors flex items-center gap-1.5 w-fit">
-                    Join Discussions 
+                    {t('githubDiscussions') || 'Ask a question or request a feature via GitHub Discussions'}
                     <Icon name="heroicons:arrow-top-right-on-square" class="w-4 h-4 opacity-80" aria-hidden="true" />
                   </a>
                 </li>
               </>
             )}
             {email && (
-              <li>
-                <a href={`mailto:${email}`} class="text-brand-cyan hover:text-brand-cyan-dark transition-colors flex items-center gap-1.5 w-fit">
-                  <Icon name="heroicons:envelope" class="w-4 h-4 opacity-80" aria-hidden="true" /> 
-                  Email Support
+              <li class="flex items-center gap-1.5">
+                <Icon name="heroicons:envelope" class="w-4 h-4 opacity-80 text-brand-cyan" aria-hidden="true" />
+                <span class="text-slate-600 text-sm">{t('emailSupport') || 'Email Support'}:</span>
+                <a href={`mailto:${email}`} class="text-brand-cyan hover:text-brand-cyan-dark transition-colors">
+                  {email}
                 </a>
               </li>
             )}
