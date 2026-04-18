@@ -20,6 +20,7 @@ export interface ResourceData {
 const rawBase = import.meta.env.BASE_URL;
 const base = rawBase.endsWith('/') ? rawBase : `${rawBase}/`;
 
+/*
 // O dicionário unificado
 export const resources: Record<string, Omit<ResourceData, 'id'>> = {
   "product-guide": {
@@ -59,6 +60,9 @@ export const resources: Record<string, Omit<ResourceData, 'id'>> = {
     }
   }
 };
+*/
+
+export const resources: Record<string, Omit<ResourceData, 'id'>> = {};
 
 // Utilitário para extrair os recursos como um array facilmente iterável
 export function getResourcesAsArray(): ResourceData[] {
