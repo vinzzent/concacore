@@ -8,7 +8,7 @@ image: "../../../assets/products/image-player.jpg"
 isNew: true
 tags: ["product", "power-bi"]
 email: "contact.concacore@gmail.com"
-#appsource: "https://appsource.microsoft.com/en-us/product/power-bi-visuals/seu-produto"
+appsource: "https://marketplace.microsoft.com/en-us/product/power-bi-visuals/concacorelabs.image-sequence-player"
 repo: "https://github.com/vinzzent/image-sequence-player"
 ---
 
