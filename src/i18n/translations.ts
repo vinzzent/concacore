@@ -39,6 +39,7 @@ export const translations = {
     eula: "End User License Agreement",
     sourceCodeLicense: "Source Code License (MIT)",
     supportPolicy: "Support Policy",
+    gamesDivision: "Games Division",
   },
   "pt-br": {
     defaultDescription: "Soluções inovadoras de arquitetura de dados e software.",
@@ -80,6 +81,7 @@ export const translations = {
     eula: "Contrato de Licença de Usuário Final",
     sourceCodeLicense: "Licença de Código Fonte (MIT)",
     supportPolicy: "Política de Suporte",
+    gamesDivision: "Games Division",
   }
 } as const;
 
